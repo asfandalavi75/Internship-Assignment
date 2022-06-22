@@ -58,11 +58,10 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             margin: const EdgeInsets.only(left: 10, right: 10),
+            height: MediaQuery.of(context).size.height * 0.07,
             child: TextFormField(
               controller: emailController,
               decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 25.0, horizontal: 10.0),
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
@@ -73,6 +72,16 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
               ),
+              onFieldSubmitted: (emailCheck) {
+                emailCheck = emailController.value.text;
+                setState(() {
+                  if (emailCheck.length > 8) {
+                    emailColor = Colors.white;
+                  } else {
+                    emailColor = Colors.red;
+                  }
+                });
+              },
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return null;
@@ -133,6 +142,16 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
               ),
+              onFieldSubmitted: (passCheck) {
+                passCheck = passwordController.value.text;
+                setState(() {
+                  if (passCheck.length > 8) {
+                    passColor = Colors.white;
+                  } else {
+                    passColor = Colors.red;
+                  }
+                });
+              },
               validator: (value) {
                 if (value == null || value.isEmpty) {}
                 return null;
@@ -159,23 +178,7 @@ class _LoginFormState extends State<LoginForm> {
               width: MediaQuery.of(context).size.width * 0.85,
               child: ElevatedButton(
                 onPressed: () {
-                  bool emailCheck = emailController.value.text.isNotEmpty;
-                  bool passCheck = passwordController.value.text.isNotEmpty;
-                  int emailLen = emailController.value.text.length;
-                  int passLen = passwordController.value.text.length;
-
-                  setState(() {
-                    if (emailCheck == true && emailLen > 8) {
-                      emailColor = Colors.white;
-                    } else {
-                      emailColor = Colors.red;
-                    }
-                    if (passCheck == true && passLen > 8) {
-                      passColor = Colors.white;
-                    } else {
-                      passColor = Colors.red;
-                    }
-                  });
+                  //Firebase_Auth Login.
                 },
                 child: Text(
                   "Log In",

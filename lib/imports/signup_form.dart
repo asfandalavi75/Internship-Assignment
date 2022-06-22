@@ -19,6 +19,7 @@ class _SignupFormState extends State<SignupForm> {
   TextEditingController confirmPassController = new TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool _isHidden = true;
+  Color nameColor = Colors.white;
   Color emailColor = Colors.white;
   Color passColor = Colors.white;
   @override
@@ -54,11 +55,12 @@ class _SignupFormState extends State<SignupForm> {
               ],
               borderRadius: BorderRadius.circular(25),
               border: Border.all(
-                color: emailColor,
+                color: nameColor,
                 width: 2,
               ),
             ),
             margin: const EdgeInsets.only(left: 10, right: 10),
+            height: MediaQuery.of(context).size.height * 0.07,
             child: TextFormField(
               controller: nameController,
               decoration: InputDecoration(
@@ -72,6 +74,16 @@ class _SignupFormState extends State<SignupForm> {
                   ),
                 ),
               ),
+              onFieldSubmitted: (nameCheck) {
+                nameCheck = nameController.value.text;
+                setState(() {
+                  if (nameCheck.isNotEmpty == true) {
+                    nameColor = Colors.white;
+                  } else {
+                    nameColor = Colors.red;
+                  }
+                });
+              },
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return null;
@@ -111,6 +123,7 @@ class _SignupFormState extends State<SignupForm> {
               ),
             ),
             margin: const EdgeInsets.only(left: 10, right: 10),
+            height: MediaQuery.of(context).size.height * 0.07,
             child: TextFormField(
               controller: emailController,
               decoration: InputDecoration(
@@ -124,6 +137,16 @@ class _SignupFormState extends State<SignupForm> {
                   ),
                 ),
               ),
+              onFieldSubmitted: (emailCheck) {
+                emailCheck = emailController.value.text;
+                setState(() {
+                  if (emailCheck.length > 8) {
+                    emailColor = Colors.white;
+                  } else {
+                    emailColor = Colors.red;
+                  }
+                });
+              },
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return null;
@@ -184,6 +207,16 @@ class _SignupFormState extends State<SignupForm> {
                   ),
                 ),
               ),
+              onFieldSubmitted: (passCheck) {
+                passCheck = passwordController.value.text;
+                setState(() {
+                  if (passCheck.length >= 8) {
+                    passColor = Colors.white;
+                  } else {
+                    passColor = Colors.red;
+                  }
+                });
+              },
               validator: (value) {
                 if (value == null || value.isEmpty) {}
                 return null;
@@ -242,6 +275,17 @@ class _SignupFormState extends State<SignupForm> {
                   ),
                 ),
               ),
+              onFieldSubmitted: (passConCheck) {
+                passConCheck = confirmPassController.value.text;
+                String passCheck = passwordController.value.text;
+                setState(() {
+                  if (passConCheck == passCheck) {
+                    passColor = Colors.white;
+                  } else {
+                    passColor = Colors.red;
+                  }
+                });
+              },
               validator: (value) {
                 if (value == null || value.isEmpty) {}
                 return null;
@@ -255,23 +299,9 @@ class _SignupFormState extends State<SignupForm> {
               width: MediaQuery.of(context).size.width * 0.85,
               child: ElevatedButton(
                 onPressed: () {
-                  bool emailCheck = emailController.value.text.isNotEmpty;
-                  bool passCheck = passwordController.value.text.isNotEmpty;
-                  int emailLen = emailController.value.text.length;
-                  int passLen = passwordController.value.text.length;
+                  //Signup
 
-                  setState(() {
-                    if (emailCheck == true && emailLen > 8) {
-                      emailColor = Colors.white;
-                    } else {
-                      emailColor = Colors.red;
-                    }
-                    if (passCheck == true && passLen > 8) {
-                      passColor = Colors.white;
-                    } else {
-                      passColor = Colors.red;
-                    }
-                  });
+                  setState(() {});
                 },
                 child: Text(
                   "Sign Up",
