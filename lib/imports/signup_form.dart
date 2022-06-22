@@ -2,20 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internship_assignment/login_page.dart';
-import '../signup_page.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({
+class SignupForm extends StatefulWidget {
+  const SignupForm({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<SignupForm> createState() => _SignupFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _SignupFormState extends State<SignupForm> {
+  TextEditingController nameController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
+  TextEditingController confirmPassController = new TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool _isHidden = true;
   Color emailColor = Colors.white;
@@ -27,6 +28,58 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Container(
+            margin: const EdgeInsets.only(left: 20, top: 20, bottom: 5),
+            child: Text(
+              "Name",
+              style: GoogleFonts.lato(
+                fontSize: 20,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3), //color of shadow
+                  spreadRadius: 5, //spread radius
+                  blurRadius: 7, // blur radius
+                  offset: Offset(0, 2), // changes position of shadow
+                  //first paramerter of offset is left-right
+                  //second parameter is top to down
+                ),
+                //you can set more BoxShadow() here
+              ],
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(
+                color: emailColor,
+                width: 2,
+              ),
+            ),
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            child: TextFormField(
+              controller: nameController,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  borderSide: const BorderSide(
+                    width: 0,
+                    style: BorderStyle.none,
+                  ),
+                ),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return null;
+                }
+                return null;
+              },
+            ),
+          ),
           Container(
             margin: const EdgeInsets.only(left: 20, top: 20, bottom: 5),
             child: Text(
@@ -61,8 +114,6 @@ class _LoginFormState extends State<LoginForm> {
             child: TextFormField(
               controller: emailController,
               decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 25.0, horizontal: 10.0),
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
@@ -140,16 +191,61 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
           Container(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {},
-              child: Text(
-                "Forgot Password?",
-                style: GoogleFonts.lato(
-                  fontSize: 15,
-                  color: Colors.black,
+            margin: const EdgeInsets.only(left: 20, top: 20, bottom: 5),
+            child: Text(
+              " Confirm Password",
+              style: GoogleFonts.lato(
+                fontSize: 20,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            height: MediaQuery.of(context).size.height * 0.07,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3), //color of shadow
+                  spreadRadius: 5, //spread radius
+                  blurRadius: 7, // blur radius
+                  offset: Offset(0, 2), // changes position of shadow
+                  //first paramerter of offset is left-right
+                  //second parameter is top to down
+                ),
+              ],
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(
+                color: passColor,
+                width: 2,
+              ),
+            ),
+            child: TextFormField(
+              controller: confirmPassController,
+              obscureText: _isHidden,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                suffix: InkWell(
+                  onTap: _togglePasswordView,
+                  child: Icon(
+                    _isHidden ? Icons.visibility : Icons.visibility_off,
+                  ),
+                ),
+                //eye icon if passenable = true, else, Icon is ***__
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  borderSide: const BorderSide(
+                    width: 0,
+                    style: BorderStyle.none,
+                  ),
                 ),
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {}
+                return null;
+              },
             ),
           ),
           Center(
@@ -178,7 +274,7 @@ class _LoginFormState extends State<LoginForm> {
                   });
                 },
                 child: Text(
-                  "Log In",
+                  "Sign Up",
                   style: GoogleFonts.lato(
                     fontSize: 25,
                   ),
@@ -195,18 +291,18 @@ class _LoginFormState extends State<LoginForm> {
           ),
           Center(
             child: Container(
-                margin: const EdgeInsets.only(top: 90),
+                margin: const EdgeInsets.only(top: 10, bottom: 10),
                 height: MediaQuery.of(context).size.height * 0.07,
                 width: MediaQuery.of(context).size.width * 0.85,
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => SignupPage()),
+                      MaterialPageRoute(builder: (context) => LoginPage()),
                     );
                   },
                   child: Text(
-                    "New user? Create account",
+                    "Already a User? Log in",
                     style: GoogleFonts.lato(
                       fontSize: 15,
                       color: Colors.indigo,
