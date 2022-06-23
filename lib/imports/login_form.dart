@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -145,7 +146,7 @@ class _LoginFormState extends State<LoginForm> {
               onFieldSubmitted: (passCheck) {
                 passCheck = passwordController.value.text;
                 setState(() {
-                  if (passCheck.length > 8) {
+                  if (passCheck.length >= 8) {
                     passColor = Colors.white;
                   } else {
                     passColor = Colors.red;
@@ -177,9 +178,7 @@ class _LoginFormState extends State<LoginForm> {
               height: MediaQuery.of(context).size.height * 0.07,
               width: MediaQuery.of(context).size.width * 0.85,
               child: ElevatedButton(
-                onPressed: () {
-                  //Firebase_Auth Login.
-                },
+                onPressed: logIn,
                 child: Text(
                   "Log In",
                   style: GoogleFonts.lato(
@@ -203,7 +202,7 @@ class _LoginFormState extends State<LoginForm> {
                 width: MediaQuery.of(context).size.width * 0.85,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SignupPage()),
                     );
@@ -233,6 +232,39 @@ class _LoginFormState extends State<LoginForm> {
         ],
       ),
     );
+  }
+
+  Future logIn() async {
+    // showDialog(
+    //     context: context,
+    //     barrierDismissible: false,
+    //     builder: (context) => const Center(
+    //           child: CircularProgressIndicator(),
+    //         ));
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim());
+    } on FirebaseAuthException catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          String error = e.message.toString();
+          return AlertDialog(
+            title: Text(error),
+            actions: <Widget>[
+              ElevatedButton(
+                child: new Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      print(e);
+    }
   }
 
   void _togglePasswordView() {

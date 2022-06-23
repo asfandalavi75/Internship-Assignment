@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internship_assignment/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../home_page.dart';
 
 class SignupForm extends StatefulWidget {
   const SignupForm({
@@ -22,6 +25,9 @@ class _SignupFormState extends State<SignupForm> {
   Color nameColor = Colors.white;
   Color emailColor = Colors.white;
   Color passColor = Colors.white;
+  bool nameStatus = false;
+  bool emailStatus = false;
+  bool passStatus = false;
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -79,8 +85,10 @@ class _SignupFormState extends State<SignupForm> {
                 setState(() {
                   if (nameCheck.isNotEmpty == true) {
                     nameColor = Colors.white;
+                    nameStatus = true;
                   } else {
                     nameColor = Colors.red;
+                    nameStatus = false;
                   }
                 });
               },
@@ -142,8 +150,10 @@ class _SignupFormState extends State<SignupForm> {
                 setState(() {
                   if (emailCheck.length > 8) {
                     emailColor = Colors.white;
+                    emailStatus = true;
                   } else {
                     emailColor = Colors.red;
+                    emailStatus = false;
                   }
                 });
               },
@@ -212,8 +222,10 @@ class _SignupFormState extends State<SignupForm> {
                 setState(() {
                   if (passCheck.length >= 8) {
                     passColor = Colors.white;
+                    passStatus = true;
                   } else {
                     passColor = Colors.red;
+                    passStatus = false;
                   }
                 });
               },
@@ -281,8 +293,10 @@ class _SignupFormState extends State<SignupForm> {
                 setState(() {
                   if (passConCheck == passCheck) {
                     passColor = Colors.white;
+                    passStatus = true;
                   } else {
                     passColor = Colors.red;
+                    passStatus = false;
                   }
                 });
               },
@@ -298,11 +312,7 @@ class _SignupFormState extends State<SignupForm> {
               height: MediaQuery.of(context).size.height * 0.07,
               width: MediaQuery.of(context).size.width * 0.85,
               child: ElevatedButton(
-                onPressed: () {
-                  //Signup
-
-                  setState(() {});
-                },
+                onPressed: signUp,
                 child: Text(
                   "Sign Up",
                   style: GoogleFonts.lato(
@@ -362,5 +372,44 @@ class _SignupFormState extends State<SignupForm> {
     setState(() {
       _isHidden = !_isHidden;
     });
+  }
+
+  Future signUp() async {
+    if (nameStatus && emailStatus) {
+      try {
+        UserCredential result = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: emailController.text.trim(),
+                password: passwordController.text.trim());
+        User? user = result.user;
+        FirebaseFirestore.instance
+            .collection('users')
+            .add({'userID': user!.uid, 'name': nameController.text.trim()});
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      } on FirebaseAuthException catch (e) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            String error = e.message.toString();
+            return AlertDialog(
+              title: Text(error),
+              actions: <Widget>[
+                ElevatedButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        print(e);
+      }
+    }
   }
 }
