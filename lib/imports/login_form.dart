@@ -38,6 +38,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
           ),
+          /////////////////Email TextField Start
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -101,6 +102,9 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
           ),
+          /////////////////Email TextField End
+
+          //////////////// Password TextField Start
           Container(
             margin: const EdgeInsets.only(left: 10, right: 10),
             height: MediaQuery.of(context).size.height * 0.07,
@@ -159,19 +163,9 @@ class _LoginFormState extends State<LoginForm> {
               },
             ),
           ),
-          Container(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {},
-              child: Text(
-                "Forgot Password?",
-                style: GoogleFonts.lato(
-                  fontSize: 15,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
+          //////////////// Password TextField End
+          const ForgetPassButton(),
+
           Center(
             child: Container(
               margin: const EdgeInsets.all(20),
@@ -235,21 +229,37 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Future logIn() async {
-    // showDialog(
-    //     context: context,
-    //     barrierDismissible: false,
-    //     builder: (context) => const Center(
-    //           child: CircularProgressIndicator(),
-    //         ));
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
-    } on FirebaseAuthException catch (e) {
+    if (passwordController.text.length >= 8 &&
+        emailController.text.length > 8) {
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: emailController.text.trim(),
+            password: passwordController.text.trim());
+      } on FirebaseAuthException catch (e) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            String error = e.message.toString();
+            return AlertDialog(
+              title: Text(error),
+              actions: <Widget>[
+                ElevatedButton(
+                  child: new Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        print(e);
+      }
+    } else {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          String error = e.message.toString();
+          String error = "Enter a Valid Password and Email.";
           return AlertDialog(
             title: Text(error),
             actions: <Widget>[
@@ -263,7 +273,6 @@ class _LoginFormState extends State<LoginForm> {
           );
         },
       );
-      print(e);
     }
   }
 
@@ -271,5 +280,28 @@ class _LoginFormState extends State<LoginForm> {
     setState(() {
       _isHidden = !_isHidden;
     });
+  }
+}
+
+class ForgetPassButton extends StatelessWidget {
+  const ForgetPassButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerRight,
+      child: TextButton(
+        onPressed: () {},
+        child: Text(
+          "Forgot Password?",
+          style: GoogleFonts.lato(
+            fontSize: 15,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
   }
 }

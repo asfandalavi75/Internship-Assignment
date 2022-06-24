@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internship_assignment/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../home_page.dart';
 
 class SignupForm extends StatefulWidget {
   const SignupForm({
@@ -25,9 +24,7 @@ class _SignupFormState extends State<SignupForm> {
   Color nameColor = Colors.white;
   Color emailColor = Colors.white;
   Color passColor = Colors.white;
-  bool nameStatus = false;
-  bool emailStatus = false;
-  bool passStatus = false;
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -35,6 +32,7 @@ class _SignupFormState extends State<SignupForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          //Label
           Container(
             margin: const EdgeInsets.only(left: 20, top: 20, bottom: 5),
             child: Text(
@@ -45,6 +43,7 @@ class _SignupFormState extends State<SignupForm> {
               ),
             ),
           ),
+          ///////// Name TextField Start
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -57,7 +56,6 @@ class _SignupFormState extends State<SignupForm> {
                   //first paramerter of offset is left-right
                   //second parameter is top to down
                 ),
-                //you can set more BoxShadow() here
               ],
               borderRadius: BorderRadius.circular(25),
               border: Border.all(
@@ -85,10 +83,8 @@ class _SignupFormState extends State<SignupForm> {
                 setState(() {
                   if (nameCheck.isNotEmpty == true) {
                     nameColor = Colors.white;
-                    nameStatus = true;
                   } else {
                     nameColor = Colors.red;
-                    nameStatus = false;
                   }
                 });
               },
@@ -100,6 +96,9 @@ class _SignupFormState extends State<SignupForm> {
               },
             ),
           ),
+          ///////// Name TextField End
+
+          //Label
           Container(
             margin: const EdgeInsets.only(left: 20, top: 20, bottom: 5),
             child: Text(
@@ -110,6 +109,7 @@ class _SignupFormState extends State<SignupForm> {
               ),
             ),
           ),
+          ///////// Email TextField Start
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -150,10 +150,8 @@ class _SignupFormState extends State<SignupForm> {
                 setState(() {
                   if (emailCheck.length > 8) {
                     emailColor = Colors.white;
-                    emailStatus = true;
                   } else {
                     emailColor = Colors.red;
-                    emailStatus = false;
                   }
                 });
               },
@@ -165,6 +163,8 @@ class _SignupFormState extends State<SignupForm> {
               },
             ),
           ),
+          ///////// Email TextField End
+          ///////// Label
           Container(
             margin: const EdgeInsets.only(left: 20, top: 20, bottom: 5),
             child: Text(
@@ -175,6 +175,7 @@ class _SignupFormState extends State<SignupForm> {
               ),
             ),
           ),
+          ///////// Password TextField Start
           Container(
             margin: const EdgeInsets.only(left: 10, right: 10),
             height: MediaQuery.of(context).size.height * 0.07,
@@ -208,7 +209,6 @@ class _SignupFormState extends State<SignupForm> {
                     _isHidden ? Icons.visibility : Icons.visibility_off,
                   ),
                 ),
-                //eye icon if passenable = true, else, Icon is ***__
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25),
                   borderSide: const BorderSide(
@@ -222,10 +222,8 @@ class _SignupFormState extends State<SignupForm> {
                 setState(() {
                   if (passCheck.length >= 8) {
                     passColor = Colors.white;
-                    passStatus = true;
                   } else {
                     passColor = Colors.red;
-                    passStatus = false;
                   }
                 });
               },
@@ -235,6 +233,8 @@ class _SignupFormState extends State<SignupForm> {
               },
             ),
           ),
+          ///////// Password TextField End
+          ///////// Label
           Container(
             margin: const EdgeInsets.only(left: 20, top: 20, bottom: 5),
             child: Text(
@@ -245,6 +245,8 @@ class _SignupFormState extends State<SignupForm> {
               ),
             ),
           ),
+          ///////// Confirm Password TextField Start
+
           Container(
             margin: const EdgeInsets.only(left: 10, right: 10),
             height: MediaQuery.of(context).size.height * 0.07,
@@ -293,10 +295,8 @@ class _SignupFormState extends State<SignupForm> {
                 setState(() {
                   if (passConCheck == passCheck) {
                     passColor = Colors.white;
-                    passStatus = true;
                   } else {
                     passColor = Colors.red;
-                    passStatus = false;
                   }
                 });
               },
@@ -306,6 +306,8 @@ class _SignupFormState extends State<SignupForm> {
               },
             ),
           ),
+          ///////// Confirm Password TextField End
+          //////// Signup Button Start
           Center(
             child: Container(
               margin: const EdgeInsets.all(20),
@@ -329,6 +331,7 @@ class _SignupFormState extends State<SignupForm> {
               ),
             ),
           ),
+          //////// Signup Button Start
           Center(
             child: Container(
                 margin: const EdgeInsets.only(top: 10, bottom: 10),
@@ -336,7 +339,7 @@ class _SignupFormState extends State<SignupForm> {
                 width: MediaQuery.of(context).size.width * 0.85,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.pop(
                       context,
                       MaterialPageRoute(builder: (context) => LoginPage()),
                     );
@@ -375,7 +378,15 @@ class _SignupFormState extends State<SignupForm> {
   }
 
   Future signUp() async {
-    if (nameStatus && emailStatus) {
+    bool validSignUp = false;
+
+    if ((confirmPassController.text == passwordController.text) &&
+        (passwordController.text.length >= 8) &&
+        nameController.text.isNotEmpty &&
+        emailController.text.length > 8) {
+      validSignUp = true;
+    }
+    if (validSignUp) {
       try {
         UserCredential result = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
@@ -386,7 +397,7 @@ class _SignupFormState extends State<SignupForm> {
             .collection('users')
             .add({'userID': user!.uid, 'name': nameController.text.trim()});
 
-        Navigator.pushReplacement(
+        Navigator.pop(
           context,
           MaterialPageRoute(builder: (context) => LoginPage()),
         );
