@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:internship_assignment/imports/weather_widget.dart';
 import './imports/funcs/db_user_funcs.dart';
 import 'package:google_fonts/google_fonts.dart';
 import './imports/background_shapes.dart';
+import './weather_api/api.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
+  final weatherApi = WeatherApi();
 
   @override
   Widget build(BuildContext context) {
-    Future<String> getter = getUserName();
     return FutureBuilder<String>(
         future: getUserName(),
         builder: (context, snapshot) {
@@ -41,6 +43,10 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.03,
+                ),
+                WeatherWidget(),
                 Container(
                   margin: const EdgeInsets.all(40),
                   height: MediaQuery.of(context).size.height * 0.07,
@@ -54,6 +60,14 @@ class HomePage extends StatelessWidget {
                         ),
                       )),
                 ),
+                // Container(
+                //   margin: const EdgeInsets.all(40),
+                //   height: MediaQuery.of(context).size.height * 0.07,
+                //   width: MediaQuery.of(context).size.width * 0.55,
+                //   child: ElevatedButton(
+                //       onPressed: weatherApi.getWeather,
+                //       child: const Text("Weather Button")),
+                // ),
               ],
             );
           }
