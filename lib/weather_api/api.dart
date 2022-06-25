@@ -48,7 +48,8 @@ class WeatherApi {
   }
 
   Future<Weather?>? getWeather() async {
-    Position pos = await _determineCurrentPositionStarting();
+    Position pos =
+        await _determineCurrentPositionStarting(); //Position object which is then used to get current lon and lat points(using geolocator package)
     final String host = 'api.weather.gov';
     Uri uri({String? lat, String? lon}) => Uri(
           scheme: "https",
@@ -63,26 +64,21 @@ class WeatherApi {
       lon: pos.longitude.toString(),
       lat: pos.latitude.toString(),
     );
-    print(requestUri);
     final response = await http.get(requestUri);
-
+    //initial json, which contains the foreCast uri
     final decodedJson = json.decode(response.body);
+    //get uri with forcast details
     Map<String, dynamic> properties = decodedJson['properties'];
     Uri forcastUri = Uri.parse(properties['forecast']);
     var city = properties['relativeLocation']['properties']['city'];
-    print(city);
-    print(forcastUri);
-
+    //get json from the forcast uri
     final forecastResponse = await http.get(forcastUri);
     final forecastDecodedJson = json.decode(forecastResponse.body);
-
-    print(forecastDecodedJson['properties']['periods'][0]);
-
+    // most recent weather details from forcast uri
     final weatherDetails = forecastDecodedJson['properties']['periods'][0];
 
     Weather currWeather = Weather.fromMap(weatherDetails, city);
 
-    print(currWeather.name);
     return currWeather;
   }
 }

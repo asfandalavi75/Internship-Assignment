@@ -36,6 +36,7 @@ class WeatherWidget extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
+                    //Shows City
                     Text(
                       weatherDets!.city.toString(),
                       style: GoogleFonts.lato(
@@ -43,18 +44,21 @@ class WeatherWidget extends StatelessWidget {
                         color: Colors.black,
                       ),
                     ),
+                    //Icon representing current weather and time of day
                     Image.network(
                       weatherDets.icon.toString(),
                       height: 50,
                       width: 50,
                     ),
+                    // current time period
                     Text(
-                      weatherDets.name.toString(),
+                      weatherDets.timeperiod.toString(),
                       style: GoogleFonts.lato(
                         fontSize: 30,
                         color: Colors.black,
                       ),
                     ),
+                    // Current Temperature
                     Text(
                       weatherDets.temp.toString() + " °F",
                       style: GoogleFonts.lato(
@@ -64,8 +68,9 @@ class WeatherWidget extends StatelessWidget {
                     ),
                     Text(
                       weatherDets.shortForecast.toString(),
+                      textAlign: TextAlign.center,
                       style: GoogleFonts.lato(
-                        fontSize: 30,
+                        fontSize: 20,
                         color: Colors.indigo,
                       ),
                     ),

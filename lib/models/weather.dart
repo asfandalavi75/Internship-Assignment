@@ -3,12 +3,12 @@ class Weather {
   final String city;
   final String shortForecast;
   final String icon;
-  final String name;
+  final String timeperiod;
 
   Weather.fromMap(Map<String, dynamic> json, String cityName)
       : temp = json['temperature'].toInt(),
         city = cityName,
         shortForecast = json['shortForecast'],
-        name = json['name'],
+        timeperiod = json['name'],
         icon = json['icon'];
 }

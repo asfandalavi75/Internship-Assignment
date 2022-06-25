@@ -60,14 +60,6 @@ class HomePage extends StatelessWidget {
                         ),
                       )),
                 ),
-                // Container(
-                //   margin: const EdgeInsets.all(40),
-                //   height: MediaQuery.of(context).size.height * 0.07,
-                //   width: MediaQuery.of(context).size.width * 0.55,
-                //   child: ElevatedButton(
-                //       onPressed: weatherApi.getWeather,
-                //       child: const Text("Weather Button")),
-                // ),
               ],
             );
           }

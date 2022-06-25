@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../models/user.dart';
 
 final FirebaseAuth auth = FirebaseAuth.instance;
 
 Future<String> getUserName() async {
-  String temp = "";
+  String userName = "";
 
   final User? user = auth.currentUser;
   final uid = user!.uid;
@@ -24,10 +22,9 @@ Future<String> getUserName() async {
     });
     for (var currentUser in userlist) {
       if (currentUser.userID == uid) {
-        temp = currentUser.name;
+        userName = currentUser.name;
       }
     }
   }
-  print("user: " + temp);
-  return temp;
+  return userName;
 }
